@@ -8,7 +8,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/app-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
-            <maxFileSize>1KB</maxFileSize>
+            <maxFileSize>3KB</maxFileSize>
             <maxHistory>7</maxHistory>
             <totalSizeCap>70KB</totalSizeCap>
         </rollingPolicy>
