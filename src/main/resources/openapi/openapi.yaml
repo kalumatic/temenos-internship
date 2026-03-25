@@ -43,6 +43,8 @@ paths:
                     timerId: "123e4567-e89b-12d3-a456-426614174000"
                     created: 1710686400000
                     delay: 3600
+                    status: "PENDING"
+                    attempts: 0
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '500':
@@ -68,9 +70,13 @@ paths:
                     - timerId: "123e4567-e89b-12d3-a456-426614174000"
                       created: 1710686400000
                       delay: 3600
+                      status: "SCHEDULED"
+                      attempts: 0
                     - timerId: "223e4567-e89b-12d3-a456-426614174001"
                       created: 1710686500000
                       delay: 120
+                      status: "PROCESSING"
+                      attempts: 1
         '500':
           $ref: '#/components/responses/InternalServerErrorResponse'
 
@@ -97,6 +103,8 @@ paths:
                     timerId: "123e4567-e89b-12d3-a456-426614174000"
                     created: 1710686400000
                     delay: 3600
+                    status: "COMPLETED"
+                    attempts: 2
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '404':
@@ -181,6 +189,8 @@ components:
         - timerId
         - created
         - delay
+        - status
+        - attempts
       properties:
         timerId:
           $ref: '#/components/schemas/TimerId'
@@ -188,10 +198,16 @@ components:
           $ref: '#/components/schemas/Created'
         delay:
           $ref: '#/components/schemas/DelaySeconds'
+        status:
+          $ref: '#/components/schemas/TimerStatus'
+        attempts:
+          $ref: '#/components/schemas/Attempts'
       example:
         timerId: "123e4567-e89b-12d3-a456-426614174000"
         created: 1710686400000
         delay: 3600
+        status: "PENDING"
+        attempts: 0
 
     TimerList:
       type: array
@@ -234,6 +250,28 @@ components:
       minimum: 1
       maximum: 604800
       example: 3600
+
+    TimerStatus:
+      type: string
+      description: Current timer processing state.
+      readOnly: true
+      enum:
+        - PENDING
+        - LOADING
+        - SCHEDULED
+        - READY
+        - PROCESSING
+        - COMPLETED
+        - FAILED
+      example: "PENDING"
+
+    Attempts:
+      type: integer
+      format: int32
+      description: Number of processing attempts performed by the system.
+      minimum: 0
+      readOnly: true
+      example: 0
 
     ErrorResponse:
       type: object

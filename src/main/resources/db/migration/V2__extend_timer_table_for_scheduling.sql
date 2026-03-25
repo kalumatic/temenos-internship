@@ -1,0 +1,9 @@
+ALTER TABLE timer
+ADD COLUMN status VARCHAR(32) NOT NULL DEFAULT 'PENDING',
+ADD COLUMN attempts INT NOT NULL DEFAULT 0,
+ADD COLUMN updated_at BIGINT NOT NULL DEFAULT 0,
+ADD COLUMN loader_claimed_at BIGINT NULL;
+
+UPDATE timer
+SET updated_at = created
+WHERE updated_at = 0;
