@@ -1,0 +1,38 @@
+2026-03-26 13:19:42.082 INFO  [background-preinit] org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-26 13:19:42.320 INFO  [main] com.temenos.temenosinternship.TemenosInternshipApplication - Starting TemenosInternshipApplication v0.0.1-SNAPSHOT using Java 17.0.18 with PID 1 (/app/app.jar started by root in /app)
+2026-03-26 13:19:42.321 DEBUG [main] com.temenos.temenosinternship.TemenosInternshipApplication - Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-26 13:19:42.323 INFO  [main] com.temenos.temenosinternship.TemenosInternshipApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-26 13:19:45.752 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-26 13:19:45.767 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data R2DBC repositories in DEFAULT mode.
+2026-03-26 13:19:47.519 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 1721 ms. Found 1 R2DBC repository interface.
+2026-03-26 13:19:47.625 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-26 13:19:47.628 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-26 13:19:47.661 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.temenos.temenosinternship.repository.TimerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-26 13:19:47.662 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-03-26 13:19:49.371 WARN  [main] org.springframework.boot.web.server.reactive.context.AnnotationConfigReactiveWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'timersApiController' defined in URL [jar:nested:/app/app.jar/!BOOT-INF/classes/!/com/temenos/temenosinternship/api/TimersApiController.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'com.temenos.temenosinternship.api.TimersApiDelegate' available: expected single matching bean but found 2: timerController,com.temenos.temenosinternship.controller.TimerController
+2026-03-26 13:19:49.381 INFO  [main] org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-26 13:19:49.411 ERROR [main] org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in com.temenos.temenosinternship.api.TimersApiController required a single bean, but 2 were found:
+	- timerController: defined in URL [jar:nested:/app/app.jar/!BOOT-INF/classes/!/com/temenos/temenosinternship/controller/TimerController.class]
+	- com.temenos.temenosinternship.controller.TimerController: defined in URL [jar:nested:/app/app.jar/!BOOT-INF/classes/!/com/temenos/temenosinternship/controller/TimerController.class]
+
+This may be due to missing parameter name information
+
+Action:
+
+Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans, or using @Qualifier to identify the bean that should be consumed
+
+Ensure that your compiler is configured to use the '-parameters' flag.
+You may need to update both your build tool settings as well as your IDE.
+(See https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-6.1-Release-Notes#parameter-name-retention)
+
+

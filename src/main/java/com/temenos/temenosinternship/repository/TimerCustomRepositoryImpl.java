@@ -26,6 +26,40 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
     }
 
     /**
+     * Returns all persisted timers.
+     *
+     * @return all timers
+     */
+    @Override
+    public Flux<TimerEntity> findAllTimers() {
+        return databaseClient.sql("""
+            SELECT timer_id, created, delay, status, attempts, updated_at, loader_claimed_at
+            FROM timer
+            ORDER BY created DESC
+            """)
+            .map((row, metadata) -> mapTimer(row))
+            .all();
+    }
+
+    /**
+     * Finds a timer by identifier.
+     *
+     * @param timerId timer identifier
+     * @return matching timer or empty result
+     */
+    @Override
+    public Mono<TimerEntity> findTimerById(UUID timerId) {
+        return databaseClient.sql("""
+            SELECT timer_id, created, delay, status, attempts, updated_at, loader_claimed_at
+            FROM timer
+            WHERE timer_id = $1
+            """)
+            .bind(0, timerId)
+            .map((row, metadata) -> mapTimer(row))
+            .one();
+    }
+
+    /**
      * Inserts a new timer row.
      *
      * @param timerId timer identifier
@@ -40,14 +74,14 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
     public Mono<Integer> insertTimer(UUID timerId, long created, int delay, TimerStatus status, int attempts, long updatedAt) {
         return databaseClient.sql("""
             INSERT INTO timer (timer_id, created, delay, status, attempts, updated_at)
-            VALUES (:timerId, :created, :delay, :status, :attempts, :updatedAt)
+            VALUES ($1, $2, $3, $4, $5, $6)
             """)
-            .bind("timerId", timerId)
-            .bind("created", created)
-            .bind("delay", delay)
-            .bind("status", status.name())
-            .bind("attempts", attempts)
-            .bind("updatedAt", updatedAt)
+            .bind(0, timerId)
+            .bind(1, created)
+            .bind(2, delay)
+            .bind(3, status.name())
+            .bind(4, attempts)
+            .bind(5, updatedAt)
             .fetch()
             .rowsUpdated()
             .map(Math::toIntExact);
@@ -68,22 +102,22 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
                 SELECT timer_id
                 FROM timer
                 WHERE status = 'PENDING'
-                  AND (created + delay * 1000) <= :nearLimit
+                  AND (created + delay * 1000) <= $1
                 ORDER BY created
-                LIMIT :limit
+                LIMIT $2
                 FOR UPDATE SKIP LOCKED
             )
             UPDATE timer t
             SET status = 'LOADING',
-                loader_claimed_at = :now,
-                updated_at = :now
+                loader_claimed_at = $3,
+                updated_at = $3
             FROM claimed
             WHERE t.timer_id = claimed.timer_id
             RETURNING t.timer_id, t.created, t.delay, t.status, t.attempts, t.updated_at, t.loader_claimed_at
             """)
-            .bind("nearLimit", nearLimit)
-            .bind("limit", limit)
-            .bind("now", now)
+            .bind(0, nearLimit)
+            .bind(1, limit)
+            .bind(2, now)
             .map((row, metadata) -> mapTimer(row))
             .all();
     }
@@ -124,12 +158,12 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
         return databaseClient.sql("""
             UPDATE timer
             SET status = 'PROCESSING',
-                updated_at = :updatedAt
-            WHERE timer_id = :timerId
+                updated_at = $2
+            WHERE timer_id = $1
               AND status = 'READY'
             """)
-            .bind("timerId", timerId)
-            .bind("updatedAt", updatedAt)
+            .bind(0, timerId)
+            .bind(1, updatedAt)
             .fetch()
             .rowsUpdated()
             .map(Math::toIntExact);
@@ -160,12 +194,12 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
             UPDATE timer
             SET attempts = attempts + 1,
                 status = 'SCHEDULED',
-                updated_at = :updatedAt
-            WHERE timer_id = :timerId
+                updated_at = $2
+            WHERE timer_id = $1
               AND status = 'PROCESSING'
             """)
-            .bind("timerId", timerId)
-            .bind("updatedAt", updatedAt)
+            .bind(0, timerId)
+            .bind(1, updatedAt)
             .fetch()
             .rowsUpdated()
             .map(Math::toIntExact);
@@ -184,12 +218,12 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
             UPDATE timer
             SET attempts = attempts + 1,
                 status = 'FAILED',
-                updated_at = :updatedAt
-            WHERE timer_id = :timerId
+                updated_at = $2
+            WHERE timer_id = $1
               AND status = 'PROCESSING'
             """)
-            .bind("timerId", timerId)
-            .bind("updatedAt", updatedAt)
+            .bind(0, timerId)
+            .bind(1, updatedAt)
             .fetch()
             .rowsUpdated()
             .map(Math::toIntExact);
@@ -208,13 +242,13 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
             UPDATE timer
             SET status = 'PENDING',
                 loader_claimed_at = NULL,
-                updated_at = :updatedAt
+                updated_at = $2
             WHERE status = 'LOADING'
-              AND loader_claimed_at < :staleBefore
+              AND loader_claimed_at < $1
             RETURNING timer_id, created, delay, status, attempts, updated_at, loader_claimed_at
             """)
-            .bind("updatedAt", updatedAt)
-            .bind("staleBefore", staleBefore)
+            .bind(0, staleBefore)
+            .bind(1, updatedAt)
             .map((row, metadata) -> mapTimer(row))
             .all();
     }
@@ -222,16 +256,16 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
     private Mono<Integer> updateStatus(UUID timerId, String currentStatus, String nextStatus, long updatedAt) {
         return databaseClient.sql("""
             UPDATE timer
-            SET status = :nextStatus,
+            SET status = $3,
                 loader_claimed_at = NULL,
-                updated_at = :updatedAt
-            WHERE timer_id = :timerId
-              AND status = :currentStatus
+                updated_at = $4
+            WHERE timer_id = $1
+              AND status = $2
             """)
-            .bind("timerId", timerId)
-            .bind("currentStatus", currentStatus)
-            .bind("nextStatus", nextStatus)
-            .bind("updatedAt", updatedAt)
+            .bind(0, timerId)
+            .bind(1, currentStatus)
+            .bind(2, nextStatus)
+            .bind(3, updatedAt)
             .fetch()
             .rowsUpdated()
             .map(Math::toIntExact);

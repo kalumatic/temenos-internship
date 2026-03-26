@@ -1,0 +1,14 @@
+2026-03-26 13:30:05.992 INFO  [background-preinit] org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-26 13:30:06.243 INFO  [main] com.temenos.temenosinternship.TemenosInternshipApplication - Starting TemenosInternshipApplication v0.0.1-SNAPSHOT using Java 17.0.18 with PID 1 (/app/app.jar started by root in /app)
+2026-03-26 13:30:06.244 DEBUG [main] com.temenos.temenosinternship.TemenosInternshipApplication - Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-26 13:30:06.246 INFO  [main] com.temenos.temenosinternship.TemenosInternshipApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-26 13:30:08.991 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-26 13:30:09.001 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data R2DBC repositories in DEFAULT mode.
+2026-03-26 13:30:10.906 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 1863 ms. Found 1 R2DBC repository interface.
+2026-03-26 13:30:11.071 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-26 13:30:11.076 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-26 13:30:11.117 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.temenos.temenosinternship.repository.TimerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-26 13:30:11.117 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-03-26 13:30:15.027 INFO  [main] org.redisson.Version - Redisson 4.3.0
+2026-03-26 13:30:19.961 INFO  [redisson-netty-3-5] org.redisson.connection.ConnectionsHolder - 1 connections initialized for redis/172.18.0.3:6379
+2026-03-26 13:30:20.194 INFO  [redisson-netty-3-20] org.redisson.connection.ConnectionsHolder - 24 connections initialized for redis/172.18.0.3:6379

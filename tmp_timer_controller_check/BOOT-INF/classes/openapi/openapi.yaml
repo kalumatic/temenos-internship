@@ -1,0 +1,302 @@
+openapi: 3.0.4
+info:
+  title: Timer API
+  version: 1.0.0
+  description: API for creating, retrieving and deleting timers.
+
+tags:
+  - name: Timers
+    description: Operations for managing timers.
+
+paths:
+  /api/timers:
+    post:
+      tags:
+        - Timers
+      summary: Create timer
+      description: Creates a new timer.
+      operationId: createTimer
+      requestBody:
+        required: true
+        description: Request body containing timer creation data.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTimerRequest'
+            examples:
+              validRequest:
+                summary: Valid create timer request
+                value:
+                  created: 1710686400000
+                  delay: 3600
+      responses:
+        '201':
+          description: Timer created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timer'
+              examples:
+                createdTimer:
+                  summary: Created timer
+                  value:
+                    timerId: "123e4567-e89b-12d3-a456-426614174000"
+                    created: 1710686400000
+                    delay: 3600
+                    status: "PENDING"
+                    attempts: 0
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+    get:
+      tags:
+        - Timers
+      summary: Get all timers
+      description: Returns all timers.
+      operationId: getAllTimers
+      responses:
+        '200':
+          description: Timers retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimerList'
+              examples:
+                timerList:
+                  summary: List of timers
+                  value:
+                    - timerId: "123e4567-e89b-12d3-a456-426614174000"
+                      created: 1710686400000
+                      delay: 3600
+                      status: "SCHEDULED"
+                      attempts: 0
+                    - timerId: "223e4567-e89b-12d3-a456-426614174001"
+                      created: 1710686500000
+                      delay: 120
+                      status: "PROCESSING"
+                      attempts: 1
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+  /api/timers/{timer_id}:
+    get:
+      tags:
+        - Timers
+      summary: Get timer
+      description: Returns a timer by its UUID.
+      operationId: getTimer
+      parameters:
+        - $ref: '#/components/parameters/TimerIdPathParam'
+      responses:
+        '200':
+          description: Timer retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timer'
+              examples:
+                timer:
+                  summary: Timer found
+                  value:
+                    timerId: "123e4567-e89b-12d3-a456-426614174000"
+                    created: 1710686400000
+                    delay: 3600
+                    status: "COMPLETED"
+                    attempts: 2
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+    delete:
+      tags:
+        - Timers
+      summary: Delete timer
+      description: Deletes a timer by its UUID.
+      operationId: deleteTimer
+      parameters:
+        - $ref: '#/components/parameters/TimerIdPathParam'
+      responses:
+        '200':
+          description: Timer deleted successfully.
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+        '500':
+          $ref: '#/components/responses/InternalServerErrorResponse'
+
+components:
+  parameters:
+    TimerIdPathParam:
+      name: timer_id
+      in: path
+      required: true
+      description: UUID of the timer.
+      example: "123e4567-e89b-12d3-a456-426614174000"
+      schema:
+        $ref: '#/components/schemas/TimerId'
+
+  responses:
+    BadRequestResponse:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            invalidParameters:
+              summary: Invalid request
+              value:
+                message: "Validation failed for the request."
+                code: "INVALID_PARAMETERS"
+
+    NotFoundResponse:
+      description: Timer not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            timerNotFound:
+              summary: Timer not found
+              value:
+                message: "Timer not found."
+                code: "ERROR"
+
+    InternalServerErrorResponse:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            internalError:
+              summary: Unexpected server error
+              value:
+                message: "Unexpected server error."
+                code: "ERROR"
+
+  schemas:
+    Timer:
+      type: object
+      description: Timer object.
+      required:
+        - timerId
+        - created
+        - delay
+        - status
+        - attempts
+      properties:
+        timerId:
+          $ref: '#/components/schemas/TimerId'
+        created:
+          $ref: '#/components/schemas/Created'
+        delay:
+          $ref: '#/components/schemas/DelaySeconds'
+        status:
+          $ref: '#/components/schemas/TimerStatus'
+        attempts:
+          $ref: '#/components/schemas/Attempts'
+      example:
+        timerId: "123e4567-e89b-12d3-a456-426614174000"
+        created: 1710686400000
+        delay: 3600
+        status: "PENDING"
+        attempts: 0
+
+    TimerList:
+      type: array
+      description: List of timers.
+      items:
+        $ref: '#/components/schemas/Timer'
+
+    CreateTimerRequest:
+      type: object
+      description: Request body for creating a timer.
+      required:
+        - created
+        - delay
+      properties:
+        created:
+          $ref: '#/components/schemas/Created'
+        delay:
+          $ref: '#/components/schemas/DelaySeconds'
+      example:
+        created: 1710686400000
+        delay: 3600
+
+    TimerId:
+      type: string
+      description: Timer UUID in lowercase canonical format.
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      example: "123e4567-e89b-12d3-a456-426614174000"
+
+    Created:
+      type: integer
+      format: int64
+      description: Creation timestamp in milliseconds since Unix epoch.
+      minimum: 1
+      example: 1710686400000
+
+    DelaySeconds:
+      type: integer
+      format: int32
+      description: Delay in seconds. Must be greater than 0 and at most one week.
+      minimum: 1
+      maximum: 604800
+      example: 3600
+
+    TimerStatus:
+      type: string
+      description: Current timer processing state.
+      readOnly: true
+      enum:
+        - PENDING
+        - LOADING
+        - SCHEDULED
+        - READY
+        - PROCESSING
+        - COMPLETED
+        - FAILED
+      example: "PENDING"
+
+    Attempts:
+      type: integer
+      format: int32
+      description: Number of processing attempts performed by the system.
+      minimum: 0
+      readOnly: true
+      example: 0
+
+    ErrorResponse:
+      type: object
+      description: Error response body.
+      required:
+        - message
+        - code
+      properties:
+        message:
+          $ref: '#/components/schemas/ErrorMessage'
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+      example:
+        message: "Validation failed for the request."
+        code: "INVALID_PARAMETERS"
+
+    ErrorMessage:
+      type: string
+      description: Human-readable error message.
+      example: "Timer not found."
+
+    ErrorCode:
+      type: string
+      description: Machine-readable error code.
+      enum:
+        - INVALID_PARAMETERS
+        - ERROR
+      example: "INVALID_PARAMETERS"

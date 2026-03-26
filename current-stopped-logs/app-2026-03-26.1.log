@@ -1,0 +1,12 @@
+2026-03-26 13:37:41.076 DEBUG [main] org.flywaydb.core.api.configuration.ClassicConfiguration - CherryPickConfigurationExtension not found
+2026-03-26 13:37:41.080 INFO  [main] org.flywaydb.core.internal.command.DbMigrate - Current version of schema "public": 2
+2026-03-26 13:37:41.089 INFO  [main] org.flywaydb.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2026-03-26 13:37:41.107 DEBUG [main] org.flywaydb.core.FlywayExecutor - Memory usage: 33 of 100M
+2026-03-26 13:37:41.325 INFO  [main] org.springframework.boot.reactor.netty.NettyWebServer - Netty started on port 8080 (http)
+2026-03-26 13:37:41.340 INFO  [main] com.temenos.temenosinternship.TemenosInternshipApplication - Started TemenosInternshipApplication in 17.664 seconds (process running for 21.862)
+2026-03-26 13:37:41.446 INFO  [main] com.temenos.temenosinternship.config.RequestMappingProbe - Mapped [/api/timers/{timer_id}] -> TimerController#deleteTimer
+2026-03-26 13:37:41.446 INFO  [main] com.temenos.temenosinternship.config.RequestMappingProbe - Mapped [/api/timers] -> TimerController#createTimer
+2026-03-26 13:37:41.447 INFO  [main] com.temenos.temenosinternship.config.RequestMappingProbe - Mapped [/api/timers] -> TimerController#getAllTimers
+2026-03-26 13:37:41.447 INFO  [main] com.temenos.temenosinternship.config.RequestMappingProbe - Mapped [/api/timers/{timer_id}] -> TimerController#getTimer
+2026-03-26 13:37:41.499 DEBUG [redisson-netty-3-3] com.temenos.temenosinternship.config.RedisInfrastructureInitializer - Redis stream groups initialized
+2026-03-26 13:37:41.534 DEBUG [redisson-netty-3-6] com.temenos.temenosinternship.service.CreateTimerConsumer - Skipped non-create record 1774532261444-0

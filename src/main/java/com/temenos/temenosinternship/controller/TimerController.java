@@ -6,13 +6,18 @@ import com.temenos.temenosinternship.mapper.TimerMapper;
 import com.temenos.temenosinternship.model.CreateTimerRequest;
 import com.temenos.temenosinternship.model.Timer;
 import com.temenos.temenosinternship.model.TimerStatus;
+import com.temenos.temenosinternship.model.TimersResponse;
 import com.temenos.temenosinternship.repository.TimerRepository;
 import com.temenos.temenosinternship.service.RequestStreamPublisher;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -50,7 +55,9 @@ public class TimerController implements TimersApi {
      * @return API response with generated timer information
      */
     @Override
+    @PostMapping(path = "/api/timers", consumes = "application/json", produces = "application/json")
     public Mono<ResponseEntity<Timer>> createTimer(
+        @RequestBody
         Mono<CreateTimerRequest> createTimerRequest,
         ServerWebExchange exchange
     ) {
@@ -75,9 +82,12 @@ public class TimerController implements TimersApi {
      * @return all timers
      */
     @Override
-    public Mono<ResponseEntity<Flux<Timer>>> getAllTimers(ServerWebExchange exchange) {
-        Flux<Timer> timers = timerRepository.findAll().map(timerMapper::toModel);
-        return Mono.just(ResponseEntity.ok(timers));
+    @GetMapping(path = "/api/timers", produces = "application/json")
+    public Mono<ResponseEntity<TimersResponse>> getAllTimers(ServerWebExchange exchange) {
+        return timerRepository.findAllTimers()
+            .map(timerMapper::toModel)
+            .collectList()
+            .map(timers -> ResponseEntity.ok(new TimersResponse().timers(timers)));
     }
 
     /**
@@ -88,8 +98,9 @@ public class TimerController implements TimersApi {
      * @return timer response or not found
      */
     @Override
-    public Mono<ResponseEntity<Timer>> getTimer(String timerId, ServerWebExchange exchange) {
-        return timerRepository.findById(UUID.fromString(timerId))
+    @GetMapping(path = "/api/timers/{timer_id}", produces = "application/json")
+    public Mono<ResponseEntity<Timer>> getTimer(@PathVariable("timer_id") String timerId, ServerWebExchange exchange) {
+        return timerRepository.findTimerById(UUID.fromString(timerId))
             .map(timerMapper::toModel)
             .map(ResponseEntity::ok)
             .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -103,7 +114,8 @@ public class TimerController implements TimersApi {
      * @return deletion response
      */
     @Override
-    public Mono<ResponseEntity<Void>> deleteTimer(String timerId, ServerWebExchange exchange) {
+    @DeleteMapping(path = "/api/timers/{timer_id}", produces = "application/json")
+    public Mono<ResponseEntity<Void>> deleteTimer(@PathVariable("timer_id") String timerId, ServerWebExchange exchange) {
         UUID parsedTimerId = UUID.fromString(timerId);
         return timerRepository.existsById(parsedTimerId)
             .flatMap(exists -> exists

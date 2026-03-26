@@ -12,6 +12,21 @@ import reactor.core.publisher.Mono;
 public interface TimerCustomRepository {
 
     /**
+     * Returns all persisted timers.
+     *
+     * @return all timers
+     */
+    Flux<TimerEntity> findAllTimers();
+
+    /**
+     * Finds a timer by identifier.
+     *
+     * @param timerId timer identifier
+     * @return matching timer or empty result
+     */
+    Mono<TimerEntity> findTimerById(UUID timerId);
+
+    /**
      * Inserts a new timer row.
      *
      * @param timerId timer identifier
