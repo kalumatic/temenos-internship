@@ -42,9 +42,38 @@ public class DelayedQueueService {
     public Mono<Void> schedule(UUID timerId, long created, int delaySeconds) {
         return Mono.fromRunnable(() -> {
             long timeoutMillis = timerService.calculateTimeoutMillis(created, delaySeconds, System.currentTimeMillis());
-            RBlockingQueue<String> blockingQueue = redissonClient.getBlockingQueue(READY_QUEUE_KEY);
-            RDelayedQueue<String> delayedQueue = redissonClient.getDelayedQueue(blockingQueue);
-            delayedQueue.offer(timerId.toString(), timeoutMillis, TimeUnit.MILLISECONDS);
+            getDelayedQueue().offer(timerId.toString(), timeoutMillis, TimeUnit.MILLISECONDS);
         }).subscribeOn(Schedulers.boundedElastic()).then();
+    }
+
+    /**
+     * Schedules a retry using a precomputed retry delay.
+     *
+     * @param timerId timer identifier
+     * @param retryDelayMillis retry delay in milliseconds
+     * @return completion signal
+     */
+    public Mono<Void> scheduleRetry(UUID timerId, long retryDelayMillis) {
+        return Mono.fromRunnable(() ->
+            getDelayedQueue().offer(timerId.toString(), retryDelayMillis, TimeUnit.MILLISECONDS)
+        ).subscribeOn(Schedulers.boundedElastic()).then();
+    }
+
+    /**
+     * Takes the next due timer from the ready queue.
+     *
+     * @return timer identifier from the ready queue
+     */
+    public Mono<UUID> takeReadyTimer() {
+        return Mono.fromCallable(() -> UUID.fromString(getBlockingQueue().take()))
+            .subscribeOn(Schedulers.boundedElastic());
+    }
+
+    private RBlockingQueue<String> getBlockingQueue() {
+        return redissonClient.getBlockingQueue(READY_QUEUE_KEY);
+    }
+
+    private RDelayedQueue<String> getDelayedQueue() {
+        return redissonClient.getDelayedQueue(getBlockingQueue());
     }
 }

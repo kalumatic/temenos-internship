@@ -13,6 +13,7 @@ public class TimerProperties {
     private int retryBaseDelaySeconds = 30;
     private int loaderBatchSize = 100;
     private long loaderClaimTimeoutMs = 30000;
+    private long processClaimTimeoutMs = 30000;
     private String requestStreamKey = "timer:requests";
     private String dueTimerStreamKey = "timer:due";
     private String createConsumerGroup = "timer-create-group";
@@ -106,6 +107,24 @@ public class TimerProperties {
      */
     public void setLoaderClaimTimeoutMs(long loaderClaimTimeoutMs) {
         this.loaderClaimTimeoutMs = loaderClaimTimeoutMs;
+    }
+
+    /**
+     * Returns the due stream processing claim timeout in milliseconds.
+     *
+     * @return claim timeout in milliseconds
+     */
+    public long getProcessClaimTimeoutMs() {
+        return processClaimTimeoutMs;
+    }
+
+    /**
+     * Sets the due stream processing claim timeout in milliseconds.
+     *
+     * @param processClaimTimeoutMs claim timeout in milliseconds
+     */
+    public void setProcessClaimTimeoutMs(long processClaimTimeoutMs) {
+        this.processClaimTimeoutMs = processClaimTimeoutMs;
     }
 
     /**
