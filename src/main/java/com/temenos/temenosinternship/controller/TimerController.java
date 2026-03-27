@@ -63,11 +63,19 @@ public class TimerController implements TimersApi {
     ) {
         return createTimerRequest.flatMap(request -> {
             UUID timerId = UUID.randomUUID();
-            CreateTimerCommand command = new CreateTimerCommand(timerId, request.getCreated(), request.getDelay());
+            CreateTimerCommand command = new CreateTimerCommand(
+                timerId,
+                request.getCreated(),
+                request.getDelay(),
+                request.getCallbackUrl(),
+                request.getCsrfToken()
+            );
             Timer response = new Timer()
                 .timerId(timerId.toString())
                 .created(request.getCreated())
                 .delay(request.getDelay())
+                .callbackUrl(request.getCallbackUrl())
+                .csrfToken(request.getCsrfToken())
                 .status(TimerStatus.PENDING)
                 .attempts(0);
             return requestStreamPublisher.publish(command)

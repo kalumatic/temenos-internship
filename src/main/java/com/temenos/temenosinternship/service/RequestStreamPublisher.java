@@ -40,7 +40,9 @@ public class RequestStreamPublisher {
             Map.of(
                 "timerId", command.timerId().toString(),
                 "created", Long.toString(command.created()),
-                "delay", Integer.toString(command.delay())
+                "delay", Integer.toString(command.delay()),
+                "callbackUrl", command.callbackUrl(),
+                "csrfToken", command.csrfToken()
             )
         );
         return redisTemplate.opsForStream()

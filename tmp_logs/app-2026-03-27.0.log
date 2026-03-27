@@ -1,0 +1,66 @@
+2026-03-27 01:29:03.543 INFO  [background-preinit] org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-27 01:29:03.740 INFO  [main] com.temenos.temenosinternship.TemenosInternshipApplication - Starting TemenosInternshipApplication v0.0.1-SNAPSHOT using Java 17.0.18 with PID 1 (/app/app.jar started by root in /app)
+2026-03-27 01:29:03.741 DEBUG [main] com.temenos.temenosinternship.TemenosInternshipApplication - Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-27 01:29:03.743 INFO  [main] com.temenos.temenosinternship.TemenosInternshipApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-27 01:29:05.749 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-27 01:29:05.754 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data R2DBC repositories in DEFAULT mode.
+2026-03-27 01:29:06.312 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 541 ms. Found 1 R2DBC repository interface.
+2026-03-27 01:29:06.395 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-27 01:29:06.397 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-27 01:29:06.426 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.temenos.temenosinternship.repository.TimerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-27 01:29:06.427 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-03-27 01:29:09.359 INFO  [main] org.redisson.Version - Redisson 4.3.0
+2026-03-27 01:29:11.375 INFO  [redisson-netty-3-6] org.redisson.connection.ConnectionsHolder - 1 connections initialized for redis/172.18.0.2:6379
+2026-03-27 01:29:11.595 INFO  [redisson-netty-3-20] org.redisson.connection.ConnectionsHolder - 24 connections initialized for redis/172.18.0.2:6379
+2026-03-27 01:29:18.038 WARN  [main] org.springframework.boot.web.server.reactive.context.AnnotationConfigReactiveWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'processTimerConsumer' defined in URL [jar:nested:/app/app.jar/!BOOT-INF/classes/!/com/temenos/temenosinternship/service/ProcessTimerConsumer.class]: Unsatisfied dependency expressed through constructor parameter 6: No qualifying bean of type 'org.springframework.web.reactive.function.client.WebClient$Builder' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2026-03-27 01:29:18.433 INFO  [main] org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27 01:29:18.602 ERROR [main] org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 6 of constructor in com.temenos.temenosinternship.service.ProcessTimerConsumer required a bean of type 'org.springframework.web.reactive.function.client.WebClient$Builder' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'org.springframework.web.reactive.function.client.WebClient$Builder' in your configuration.
+
+2026-03-27 01:30:43.594 INFO  [background-preinit] org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-03-27 01:30:43.858 INFO  [main] com.temenos.temenosinternship.TemenosInternshipApplication - Starting TemenosInternshipApplication v0.0.1-SNAPSHOT using Java 17.0.18 with PID 1 (/app/app.jar started by root in /app)
+2026-03-27 01:30:43.859 DEBUG [main] com.temenos.temenosinternship.TemenosInternshipApplication - Running with Spring Boot v4.0.3, Spring v7.0.5
+2026-03-27 01:30:43.860 INFO  [main] com.temenos.temenosinternship.TemenosInternshipApplication - No active profile set, falling back to 1 default profile: "default"
+2026-03-27 01:30:46.699 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-27 01:30:46.718 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data R2DBC repositories in DEFAULT mode.
+2026-03-27 01:30:48.331 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 1576 ms. Found 1 R2DBC repository interface.
+2026-03-27 01:30:48.424 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-03-27 01:30:48.428 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-03-27 01:30:48.473 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.temenos.temenosinternship.repository.TimerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-03-27 01:30:48.474 INFO  [main] org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-03-27 01:30:50.235 INFO  [main] org.redisson.Version - Redisson 4.3.0
+2026-03-27 01:30:51.259 INFO  [redisson-netty-3-5] org.redisson.connection.ConnectionsHolder - 1 connections initialized for redis/172.18.0.2:6379
+2026-03-27 01:30:51.361 INFO  [redisson-netty-3-20] org.redisson.connection.ConnectionsHolder - 24 connections initialized for redis/172.18.0.2:6379
+2026-03-27 01:30:52.475 WARN  [main] org.springframework.boot.web.server.reactive.context.AnnotationConfigReactiveWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'processTimerConsumer' defined in URL [jar:nested:/app/app.jar/!BOOT-INF/classes/!/com/temenos/temenosinternship/service/ProcessTimerConsumer.class]: Unsatisfied dependency expressed through constructor parameter 6: No qualifying bean of type 'org.springframework.web.reactive.function.client.WebClient$Builder' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2026-03-27 01:30:52.530 INFO  [main] org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-03-27 01:30:52.560 ERROR [main] org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 6 of constructor in com.temenos.temenosinternship.service.ProcessTimerConsumer required a bean of type 'org.springframework.web.reactive.function.client.WebClient$Builder' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'org.springframework.web.reactive.function.client.WebClient$Builder' in your configuration.
+

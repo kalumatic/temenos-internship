@@ -98,6 +98,8 @@ public class CreateTimerConsumer {
             command.timerId(),
             command.created(),
             command.delay(),
+            command.callbackUrl(),
+            command.csrfToken(),
             initialStatus,
             0,
             now
@@ -118,14 +120,18 @@ public class CreateTimerConsumer {
     private boolean isCreateCommand(MapRecord<String, String, String> record) {
         return record.getValue().get("timerId") != null
             && record.getValue().get("created") != null
-            && record.getValue().get("delay") != null;
+            && record.getValue().get("delay") != null
+            && record.getValue().get("callbackUrl") != null
+            && record.getValue().get("csrfToken") != null;
     }
 
     private CreateTimerCommand mapCommand(MapRecord<String, String, String> record) {
         return new CreateTimerCommand(
             UUID.fromString(record.getValue().get("timerId")),
             Long.parseLong(record.getValue().get("created")),
-            Integer.parseInt(record.getValue().get("delay"))
+            Integer.parseInt(record.getValue().get("delay")),
+            record.getValue().get("callbackUrl"),
+            record.getValue().get("csrfToken")
         );
     }
 }

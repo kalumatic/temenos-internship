@@ -33,7 +33,7 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
     @Override
     public Flux<TimerEntity> findAllTimers() {
         return databaseClient.sql("""
-            SELECT timer_id, created, delay, status, attempts, updated_at, loader_claimed_at
+            SELECT timer_id, created, delay, callback_url, csrf_token, status, attempts, updated_at, loader_claimed_at
             FROM timer
             ORDER BY created DESC
             """)
@@ -50,7 +50,7 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
     @Override
     public Mono<TimerEntity> findTimerById(UUID timerId) {
         return databaseClient.sql("""
-            SELECT timer_id, created, delay, status, attempts, updated_at, loader_claimed_at
+            SELECT timer_id, created, delay, callback_url, csrf_token, status, attempts, updated_at, loader_claimed_at
             FROM timer
             WHERE timer_id = $1
             """)
@@ -71,17 +71,28 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
      * @return number of inserted rows
      */
     @Override
-    public Mono<Integer> insertTimer(UUID timerId, long created, int delay, TimerStatus status, int attempts, long updatedAt) {
+    public Mono<Integer> insertTimer(
+        UUID timerId,
+        long created,
+        int delay,
+        String callbackUrl,
+        String csrfToken,
+        TimerStatus status,
+        int attempts,
+        long updatedAt
+    ) {
         return databaseClient.sql("""
-            INSERT INTO timer (timer_id, created, delay, status, attempts, updated_at)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO timer (timer_id, created, delay, callback_url, csrf_token, status, attempts, updated_at)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             """)
             .bind(0, timerId)
             .bind(1, created)
             .bind(2, delay)
-            .bind(3, status.name())
-            .bind(4, attempts)
-            .bind(5, updatedAt)
+            .bind(3, callbackUrl)
+            .bind(4, csrfToken)
+            .bind(5, status.name())
+            .bind(6, attempts)
+            .bind(7, updatedAt)
             .fetch()
             .rowsUpdated()
             .map(Math::toIntExact);
@@ -113,7 +124,7 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
                 updated_at = $3
             FROM claimed
             WHERE t.timer_id = claimed.timer_id
-            RETURNING t.timer_id, t.created, t.delay, t.status, t.attempts, t.updated_at, t.loader_claimed_at
+            RETURNING t.timer_id, t.created, t.delay, t.callback_url, t.csrf_token, t.status, t.attempts, t.updated_at, t.loader_claimed_at
             """)
             .bind(0, nearLimit)
             .bind(1, limit)
@@ -245,7 +256,7 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
                 updated_at = $2
             WHERE status = 'LOADING'
               AND loader_claimed_at < $1
-            RETURNING timer_id, created, delay, status, attempts, updated_at, loader_claimed_at
+            RETURNING timer_id, created, delay, callback_url, csrf_token, status, attempts, updated_at, loader_claimed_at
             """)
             .bind(0, staleBefore)
             .bind(1, updatedAt)
@@ -276,6 +287,8 @@ public class TimerCustomRepositoryImpl implements TimerCustomRepository {
         entity.setTimerId(row.get("timer_id", UUID.class));
         entity.setCreated(row.get("created", Long.class));
         entity.setDelay(row.get("delay", Integer.class));
+        entity.setCallbackUrl(row.get("callback_url", String.class));
+        entity.setCsrfToken(row.get("csrf_token", String.class));
         entity.setStatus(TimerStatus.valueOf(row.get("status", String.class)));
         entity.setAttempts(row.get("attempts", Integer.class));
         entity.setUpdatedAt(row.get("updated_at", Long.class));

@@ -21,6 +21,12 @@ public class TimerEntity {
     @Column("delay")
     private int delay;
 
+    @Column("callback_url")
+    private String callbackUrl;
+
+    @Column("csrf_token")
+    private String csrfToken;
+
     @Column("status")
     private TimerStatus status;
 
@@ -85,6 +91,42 @@ public class TimerEntity {
      */
     public void setDelay(int delay) {
         this.delay = delay;
+    }
+
+    /**
+     * Returns the callback URL.
+     *
+     * @return callback URL
+     */
+    public String getCallbackUrl() {
+        return callbackUrl;
+    }
+
+    /**
+     * Sets the callback URL.
+     *
+     * @param callbackUrl callback URL
+     */
+    public void setCallbackUrl(String callbackUrl) {
+        this.callbackUrl = callbackUrl;
+    }
+
+    /**
+     * Returns the CSRF token included in callback payloads.
+     *
+     * @return CSRF token
+     */
+    public String getCsrfToken() {
+        return csrfToken;
+    }
+
+    /**
+     * Sets the CSRF token included in callback payloads.
+     *
+     * @param csrfToken CSRF token
+     */
+    public void setCsrfToken(String csrfToken) {
+        this.csrfToken = csrfToken;
     }
 
     /**

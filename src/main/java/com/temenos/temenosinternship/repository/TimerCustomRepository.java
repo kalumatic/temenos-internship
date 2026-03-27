@@ -32,12 +32,23 @@ public interface TimerCustomRepository {
      * @param timerId timer identifier
      * @param created creation timestamp
      * @param delay delay in seconds
+     * @param callbackUrl callback URL
+     * @param csrfToken CSRF token
      * @param status initial timer status
      * @param attempts number of attempts
      * @param updatedAt last update timestamp
      * @return number of inserted rows
      */
-    Mono<Integer> insertTimer(UUID timerId, long created, int delay, TimerStatus status, int attempts, long updatedAt);
+    Mono<Integer> insertTimer(
+        UUID timerId,
+        long created,
+        int delay,
+        String callbackUrl,
+        String csrfToken,
+        TimerStatus status,
+        int attempts,
+        long updatedAt
+    );
 
     /**
      * Claims long timers that are now near their scheduling threshold.

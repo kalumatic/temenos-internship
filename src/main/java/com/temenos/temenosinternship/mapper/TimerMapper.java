@@ -21,6 +21,8 @@ public class TimerMapper {
             .timerId(entity.getTimerId().toString())
             .created(entity.getCreated())
             .delay(entity.getDelay())
+            .callbackUrl(entity.getCallbackUrl())
+            .csrfToken(entity.getCsrfToken())
             .status(com.temenos.temenosinternship.model.TimerStatus.fromValue(entity.getStatus().name()))
             .attempts(entity.getAttempts());
     }

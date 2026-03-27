@@ -29,6 +29,8 @@ paths:
                 value:
                   created: 1710686400000
                   delay: 3600
+                  callbackUrl: "http://localhost:8080/callback"
+                  csrfToken: "demo-token"
       responses:
         '201':
           description: Timer created successfully.
@@ -43,6 +45,8 @@ paths:
                     timerId: "123e4567-e89b-12d3-a456-426614174000"
                     created: 1710686400000
                     delay: 3600
+                    callbackUrl: "http://localhost:8080/callback"
+                    csrfToken: "demo-token"
                     status: "PENDING"
                     attempts: 0
         '400':
@@ -71,11 +75,15 @@ paths:
                       - timerId: "123e4567-e89b-12d3-a456-426614174000"
                         created: 1710686400000
                         delay: 3600
+                        callbackUrl: "http://localhost:8080/callback"
+                        csrfToken: "demo-token"
                         status: "SCHEDULED"
                         attempts: 0
                       - timerId: "223e4567-e89b-12d3-a456-426614174001"
                         created: 1710686500000
                         delay: 120
+                        callbackUrl: "http://localhost:8080/callback"
+                        csrfToken: "demo-token-2"
                         status: "PROCESSING"
                         attempts: 1
         '500':
@@ -104,6 +112,8 @@ paths:
                     timerId: "123e4567-e89b-12d3-a456-426614174000"
                     created: 1710686400000
                     delay: 3600
+                    callbackUrl: "http://localhost:8080/callback"
+                    csrfToken: "demo-token"
                     status: "COMPLETED"
                     attempts: 2
         '400':
@@ -190,6 +200,8 @@ components:
         - timerId
         - created
         - delay
+        - callbackUrl
+        - csrfToken
         - status
         - attempts
       properties:
@@ -199,6 +211,10 @@ components:
           $ref: '#/components/schemas/Created'
         delay:
           $ref: '#/components/schemas/DelaySeconds'
+        callbackUrl:
+          $ref: '#/components/schemas/CallbackUrl'
+        csrfToken:
+          $ref: '#/components/schemas/CsrfToken'
         status:
           $ref: '#/components/schemas/TimerStatus'
         attempts:
@@ -207,6 +223,8 @@ components:
         timerId: "123e4567-e89b-12d3-a456-426614174000"
         created: 1710686400000
         delay: 3600
+        callbackUrl: "http://localhost:8080/callback"
+        csrfToken: "demo-token"
         status: "PENDING"
         attempts: 0
 
@@ -231,14 +249,22 @@ components:
       required:
         - created
         - delay
+        - callbackUrl
+        - csrfToken
       properties:
         created:
           $ref: '#/components/schemas/Created'
         delay:
           $ref: '#/components/schemas/DelaySeconds'
+        callbackUrl:
+          $ref: '#/components/schemas/CallbackUrl'
+        csrfToken:
+          $ref: '#/components/schemas/CsrfToken'
       example:
         created: 1710686400000
         delay: 3600
+        callbackUrl: "http://localhost:8080/callback"
+        csrfToken: "demo-token"
 
     TimerId:
       type: string
@@ -260,6 +286,16 @@ components:
       minimum: 1
       maximum: 604800
       example: 3600
+
+    CallbackUrl:
+      type: string
+      description: URL that receives the timer callback when the timer expires.
+      example: "http://localhost:8080/callback"
+
+    CsrfToken:
+      type: string
+      description: Token included in the callback payload so the receiver can verify the request source.
+      example: "demo-token"
 
     TimerStatus:
       type: string

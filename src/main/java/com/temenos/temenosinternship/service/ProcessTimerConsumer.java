@@ -3,6 +3,7 @@ package com.temenos.temenosinternship.service;
 import com.temenos.temenosinternship.config.TimerProperties;
 import com.temenos.temenosinternship.domain.TimerEntity;
 import com.temenos.temenosinternship.domain.TimerStatus;
+import com.temenos.temenosinternship.mapper.TimerMapper;
 import com.temenos.temenosinternship.repository.TimerRepository;
 import java.time.Duration;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.springframework.data.redis.connection.stream.StreamOffset;
 import org.springframework.data.redis.connection.stream.StreamReadOptions;
 import org.springframework.data.redis.core.ReactiveStringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -35,6 +37,8 @@ public class ProcessTimerConsumer {
     private final TimerProperties timerProperties;
     private final TimerService timerService;
     private final DelayedQueueService delayedQueueService;
+    private final TimerMapper timerMapper;
+    private final WebClient webClient;
 
     /**
      * Creates a process timer consumer.
@@ -44,19 +48,25 @@ public class ProcessTimerConsumer {
      * @param timerProperties timer configuration properties
      * @param timerService timer scheduling rules
      * @param delayedQueueService delayed queue service
+     * @param timerMapper timer mapper
+     * @param webClientBuilder web client builder
      */
     public ProcessTimerConsumer(
         ReactiveStringRedisTemplate redisTemplate,
         TimerRepository timerRepository,
         TimerProperties timerProperties,
         TimerService timerService,
-        DelayedQueueService delayedQueueService
+        DelayedQueueService delayedQueueService,
+        TimerMapper timerMapper,
+        WebClient.Builder webClientBuilder
     ) {
         this.redisTemplate = redisTemplate;
         this.timerRepository = timerRepository;
         this.timerProperties = timerProperties;
         this.timerService = timerService;
         this.delayedQueueService = delayedQueueService;
+        this.timerMapper = timerMapper;
+        this.webClient = webClientBuilder.build();
     }
 
     /**
@@ -160,7 +170,13 @@ public class ProcessTimerConsumer {
     }
 
     private Mono<Void> processTimer(TimerEntity timer) {
-        return Mono.empty();
+        return webClient.post()
+            .uri(timer.getCallbackUrl())
+            .bodyValue(timerMapper.toModel(timer))
+            .retrieve()
+            .toBodilessEntity()
+            .doOnSuccess(response -> log.info("Delivered callback for timer {} to {}", timer.getTimerId(), timer.getCallbackUrl()))
+            .then();
     }
 
     private boolean isDueTimerRecord(MapRecord<String, String, String> record) {
