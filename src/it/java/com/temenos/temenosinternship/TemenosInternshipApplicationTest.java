@@ -87,7 +87,7 @@ public class TemenosInternshipApplicationTest {
 
     @Test
     public void testCreateTimer() {
-        WireMock.stubFor(WireMock.get(WireMock.urlPathMatching("^" + "/callback"))
+        WireMock.stubFor(WireMock.post(WireMock.urlPathMatching("^" + "/callback"))
                 .willReturn(WireMock.aResponse().withStatus(200)));
 
 
@@ -99,7 +99,7 @@ public class TemenosInternshipApplicationTest {
 
         WireMock.verify(
                 1,
-                WireMock.getRequestedFor(WireMock.urlEqualTo("/callback"))
+                WireMock.postRequestedFor(WireMock.urlEqualTo("/callback"))
         );
     }
 
